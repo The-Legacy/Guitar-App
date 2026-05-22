@@ -1,0 +1,240 @@
+/* ── Layout ── */
+.dashboard {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background:
+    radial-gradient(ellipse 90% 45% at 50% -5%, rgba(13, 148, 136, 0.13) 0%, transparent 100%),
+    var(--color-bg);
+}
+
+/* ── Header ── */
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.dashboard-logo {
+  font-size: 4rem;
+  line-height: 1;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 28px rgba(45, 212, 191, 0.55));
+}
+
+.dashboard-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  background: linear-gradient(130deg, #5eead4 0%, var(--color-teal-light) 50%, #99f6e4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dashboard-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.98rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: 0.015em;
+}
+
+.dashboard-divider {
+  width: 52px;
+  height: 2px;
+  margin: 0 auto;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-teal), var(--color-orange));
+}
+
+/* ── Card Grid ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 660px;
+}
+
+.dashboard-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-family: inherit;
+  color: var(--color-text);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+/* Gradient top stripe */
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 16px 16px 0 0;
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.dashboard-card--teal::before {
+  background: linear-gradient(90deg, var(--color-teal-dark), var(--color-teal-light));
+}
+
+.dashboard-card--orange::before {
+  background: linear-gradient(90deg, var(--color-orange-dark), var(--color-orange-light));
+}
+
+.dashboard-card:hover::before {
+  opacity: 1;
+}
+
+/* Hover state */
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  background: var(--color-surface-2);
+}
+
+.dashboard-card--teal:hover {
+  border-color: rgba(13, 148, 136, 0.55);
+  box-shadow: 0 12px 40px rgba(13, 148, 136, 0.18), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-card--orange:hover {
+  border-color: rgba(249, 115, 22, 0.55);
+  box-shadow: 0 12px 40px rgba(249, 115, 22, 0.18), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Icon Badge ── */
+.card-icon-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+  margin-bottom: 0.4rem;
+  transition: transform 0.2s ease;
+}
+
+.dashboard-card:hover .card-icon-wrap {
+  transform: scale(1.08);
+}
+
+.dashboard-card--teal .card-icon-wrap {
+  background: rgba(13, 148, 136, 0.15);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+}
+
+.dashboard-card--orange .card-icon-wrap {
+  background: rgba(249, 115, 22, 0.12);
+  border: 1px solid rgba(249, 115, 22, 0.18);
+}
+
+/* ── Card Text ── */
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+
+.dashboard-card--teal .card-title {
+  color: var(--color-teal-light);
+}
+
+.dashboard-card--orange .card-title {
+  color: var(--color-orange-light);
+}
+
+.card-description {
+  font-size: 0.84rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* ── Arrow ── */
+.card-arrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  margin-top: 0.5rem;
+  align-self: flex-start;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dashboard-card--teal .card-arrow {
+  color: var(--color-teal-light);
+}
+
+.dashboard-card--orange .card-arrow {
+  color: var(--color-orange-light);
+}
+
+.dashboard-card:hover .card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── Theme Toggle ── */
+.theme-toggle {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.theme-toggle:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-teal);
+  transform: scale(1.1);
+}
+
+/* ── Light mode overrides ── */
+[data-theme="light"] .dashboard-title {
+  background: linear-gradient(130deg, #0d9488 0%, #0f766e 50%, #0891b2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .dashboard {
+  background:
+    radial-gradient(ellipse 90% 45% at 50% -5%, rgba(13, 148, 136, 0.07) 0%, transparent 100%),
+    var(--color-bg);
+}
