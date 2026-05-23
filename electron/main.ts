@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, globalShortcut } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -24,6 +24,21 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
+// WSL2/WSLg: request 60 ms PulseAudio buffer (default is ~200 ms)
+process.env.PULSE_LATENCY_MSEC = '60'
+
+// Disable Chromium's autoplay restriction so Web Audio works without gesture
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
+
+// WSL2 / WSLg: pass the PulseAudio server path directly to Chromium's audio
+// service. The sandboxed audio process can't inherit env vars, so it won't
+// find WSLg's PulseServer on its own.
+if (process.env.PULSE_SERVER) {
+  app.commandLine.appendSwitch('pulse-server', process.env.PULSE_SERVER)
+}
+// Also run audio in-process to avoid the out-of-process sandbox blocking the socket
+app.commandLine.appendSwitch('disable-features', 'AudioServiceOutOfProcess')
+
 let win: BrowserWindow | null
 
 function createWindow() {
@@ -36,6 +51,9 @@ function createWindow() {
     },
   })
 
+  // Ensure the window is never silently muted by Electron's background-tab policy
+  win.webContents.setAudioMuted(false)
+
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
@@ -43,6 +61,8 @@ function createWindow() {
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
+    // Open DevTools automatically in dev mode
+    win.webContents.openDevTools()
   } else {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
@@ -67,4 +87,9 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow()
+  globalShortcut.register('F12', () => {
+    win?.webContents.toggleDevTools()
+  })
+})

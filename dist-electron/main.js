@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu } from "electron";
+import { app, BrowserWindow, globalShortcut, Menu } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -9,6 +9,11 @@ const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
 const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+if (process.env.PULSE_SERVER) {
+  app.commandLine.appendSwitch("pulse-server", process.env.PULSE_SERVER);
+}
+app.commandLine.appendSwitch("disable-features", "AudioServiceOutOfProcess");
 let win;
 function createWindow() {
   Menu.setApplicationMenu(null);
@@ -18,11 +23,13 @@ function createWindow() {
       preload: path.join(__dirname$1, "preload.mjs")
     }
   });
+  win.webContents.setAudioMuted(false);
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
   });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
+    win.webContents.openDevTools();
   } else {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
@@ -38,7 +45,12 @@ app.on("activate", () => {
     createWindow();
   }
 });
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  globalShortcut.register("F12", () => {
+    win == null ? void 0 : win.webContents.toggleDevTools();
+  });
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,

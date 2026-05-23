@@ -19,9 +19,9 @@
 }
 
 .dashboard-logo {
-  font-size: 4rem;
-  line-height: 1;
+  line-height: 0;
   margin-bottom: 1rem;
+  color: var(--color-teal-light);
   filter: drop-shadow(0 0 28px rgba(45, 212, 191, 0.55));
 }
 
@@ -141,11 +141,13 @@
 }
 
 .dashboard-card--teal .card-icon-wrap {
+  color: var(--color-teal-light);
   background: rgba(13, 148, 136, 0.15);
   border: 1px solid rgba(13, 148, 136, 0.2);
 }
 
 .dashboard-card--orange .card-icon-wrap {
+  color: var(--color-orange-light);
   background: rgba(249, 115, 22, 0.12);
   border: 1px solid rgba(249, 115, 22, 0.18);
 }
@@ -210,13 +212,13 @@
   border-radius: 50%;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  font-size: 1.1rem;
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0;
-  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
 }
 
 .theme-toggle:hover {
